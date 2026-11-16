@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10243d">
+<title>I AM A TRAVELLER</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6fa;color:#172b45}
+header{background:#10243d;color:white;padding:25px 20px 30px;border-radius:0 0 25px 25px}
+.brand{font-size:25px;font-weight:900;letter-spacing:1px}
+.tagline{color:#f2c46d;font-size:12px;letter-spacing:3px;margin-top:7px}
+.stats{display:flex;gap:12px;margin-top:22px}
+.stat{background:#ffffff18;border:1px solid #ffffff25;border-radius:12px;padding:12px;flex:1}
+.stat small{color:#d9e1ed}
+.stat strong{display:block;font-size:22px;margin-top:5px}
+main{max-width:650px;margin:auto;padding:20px}
+nav{display:flex;gap:7px;background:white;padding:6px;border-radius:14px;margin-bottom:20px}
+nav button{flex:1;border:0;background:transparent;padding:12px 5px;border-radius:10px;font-weight:bold;color:#617087}
+nav button.active{background:#10243d;color:white}
+.card{background:white;padding:20px;border-radius:18px;margin-bottom:16px;box-shadow:0 3px 15px #142b4510}
+h2{margin:0 0 12px;font-size:21px}
+h3{margin:0 0 8px}
+p{line-height:1.5;color:#65738a}
+.hero{background:linear-gradient(130deg,#173d60,#327d91);color:white;padding:25px;border-radius:18px;margin-bottom:17px}
+.hero h2{font-size:26px}
+.hero p{color:#e2edf4}
+button{cursor:pointer;font-size:15px}
+.primary{background:#e6aa42;color:#182b43;border:0;padding:14px 18px;border-radius:11px;font-weight:bold;width:100%}
+.answer{display:block;width:100%;text-align:left;padding:15px;margin:10px 0;background:#f4f6fa;border:1px solid #dce2eb;border-radius:11px;color:#172b45}
+.answer:disabled{opacity:1}
+.answer.correct{background:#e1f5e9;border-color:#26985a}
+.answer.wrong{background:#ffebeb;border-color:#d75c5c}
+.feedback{padding:13px;background:#f1f5fa;border-radius:12px;margin:12px 0;line-height:1.5}
+.destination{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid #edf0f4}
+.flag{font-size:34px}
+.destination-info{flex:1}
+.destination-info p{font-size:13px;margin:5px 0}
+.lock{font-size:12px;color:#78869a}
+.progress{height:9px;background:#e7ebf1;border-radius:20px;overflow:hidden;margin:10px 0}
+.progress div{height:100%;background:#e6aa42}
+.badge{display:inline-block;padding:6px 10px;border-radius:20px;background:#e1f5e9;color:#23754a;font-size:12px;font-weight:bold}
+.hidden{display:none}
+footer{text-align:center;color:#8894a5;font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">🌍 I AM A TRAVELLER</div>
+  <div class="tagline">LEARN. PLAY. EXPLORE.</div>
+  <div class="stats">
+    <div class="stat"><small>⭐ EXPERIENCE</small><strong id="xp">0 XP</strong></div>
+    <div class="stat"><small>🪙 TRAVEL COINS</small><strong id="coins">0</strong></div>
+  </div>
+</header>
+
+<main>
+  <nav>
+    <button class="active" onclick="showTab('home',this)">Home</button>
+    <button onclick="showTab('learn',this)">Learn</button>
+    <button onclick="showTab('map',this)">Explore</button>
+    <button onclick="showTab('profile',this)">Profile</button>
+  </nav>
+
+  <section id="home">
+    <div class="hero">
+      <h2>Your next adventure starts here ✈️</h2>
+      <p>Learn a language. Complete missions. Discover the world.</p>
+      <button class="primary" onclick="showTab('learn',document.querySelectorAll('nav button')[1])">Start learning →</button>
+    </div>
+    <div class="card">
+      <h2>🧭 Today's mission</h2>
+      <p>Complete an English adventure and earn experience points.</p>
+      <button class="primary" onclick="showTab('learn',document.querySelectorAll('nav button')[1])">Play your first lesson</button>
+    </div>
+    <div class="card">
+      <h2>🗺️ Your journey</h2>
+      <p id="homeProgress">London is waiting for you!</p>
+      <button class="primary" onclick="showTab('map',document.querySelectorAll('nav button')[2])">Explore destinations</button>
+    </div>
+  </section>
+
+  <section id="learn" class="hidden">
+    <div class="card">
+      <h2>🇬🇧 English Adventure</h2>
+      <p id="questionNumber">Question 1 of 5</p>
+      <div class="progress"><div id="questionProgress" style="width:20%"></div></div>
+      <h3 id="question"></h3>
+      <div id="answers"></div>
+      <div id="feedback" class="feedback hidden"></div>
+      <button id="next" class="primary hidden" onclick="nextQuestion()">Next question →</button>
+      <div id="result" class="hidden">
+        <h2>🎉 Adventure completed!</h2>
+        <p id="resultText"></p>
+        <button class="primary" onclick="startLesson()">Play again</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="map" class="hidden">
+    <div class="card">
+      <h2>🌍 Explore the world</h2>
+      <p>Earn XP to unlock your next destination.</p>
+      <div id="destinations"></div>
+    </div>
+  </section>
+
+  <section id="profile" class="hidden">
+    <div class="card" style="text-align:center">
+      <div style="font-size:55px">🧳</div>
+      <h2>New Traveller</h2>
+      <p>Your journey is just beginning.</p>
+      <h2 id="profileXP">0 XP</h2>
+      <span class="badge">Explorer in training</span>
+    </div>
+    <div class="card">
+      <h2>🏆 Your achievements</h2>
+      <p id="lessons">Lessons completed: 0</p>
+      <p id="perfect">Perfect lessons: 0</p>
+      <p id="questions">Questions answered: 0</p>
+    </div>
+  </section>
+</main>
+
+<footer>I AM A TRAVELLER © 2026 · LEARN. PLAY. EXPLORE.</footer>
+
+<script>
+const questions=[
+ {q:"You arrive at a London hotel. What do you say?",a:["Good morning, I have a reservation.","Good night, I am a reservation.","I reservation have."],c:0,e:"This is a natural and polite way to check in."},
+ {q:"Choose the correct sentence.",a:["She go to Paris every year.","She goes to Paris every year.","She going to Paris every year."],c:1,e:"With she, use 'goes' in the present simple."},
+ {q:"What does 'Where is the train station?' mean?",a:["Where is the hotel?","How much is the ticket?","Where is the train station?"],c:2,e:"You are asking someone to show you the train station."},
+ {q:"Complete: I ___ travelling tomorrow.",a:["am","is","are"],c:0,e:"Use 'I am' with the present continuous."},
+ {q:"What is the opposite of 'arrive'?",a:["Visit","Leave","Explore"],c:1,e:"Arrive means to reach a place. Leave means to go away."}
+];
+
+let data={xp:0,coins:0,lessons:0,perfect:0,answered:0};
+try{
+ const saved=JSON.parse(localStorage.getItem("travellerData"));
+ if(saved)data={...data,...saved};
+}catch(e){}
+
+let index=0,score=0,chosen=false;
+
+function save(){
+ localStorage.setItem("travellerData",JSON.stringify(data));
+ update();
+}
+
+function update(){
+ document.getElementById("xp").textContent=data.xp+" XP";
+ document.getElementById("coins").textContent=data.coins;
+ document.getElementById("profileXP").textContent=data.xp+" XP";
+ document.getElementById("lessons").textContent="Lessons completed: "+data.lessons;
+ document.getElementById("perfect").textContent="Perfect lessons: "+data.perfect;
+ document.getElementById("questions").textContent="Questions answered: "+data.answered;
+ document.getElementById("homeProgress").textContent=data.xp>=100?"Paris is unlocked! Your adventure continues.":"Earn "+Math.max(0,100-data.xp)+" more XP to unlock Paris.";
+ renderMap();
+}
+
+function showTab(name,button){
+ document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+ document.getElementById(name).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ if(button)button.classList.add("active");
+}
+
+function startLesson(){
+ index=0;score=0;chosen=false;
+ document.getElementById("result").classList.add("hidden");
+ document.getElementById("questionNumber").classList.remove("hidden");
+ document.getElementById("questionProgress").parentElement.classList.remove("hidden");
+ document.getElementById("question").classList.remove("hidden");
+ document.getElementById("answers").classList.remove("hidden");
+ showQuestion();
+}
+
+function showQuestion(){
+ chosen=false;
+ const q=questions[index];
+ document.getElementById("questionNumber").textContent="Question "+(index+1)+" of 5";
+ document.getElementById("questionProgress").style.width=((index+1)*20)+"%";
+ document.getElementById("question").textContent=q.q;
+ document.getElementById("feedback").classList.add("hidden");
+ document.getElementById("next").classList.add("hidden");
+ const area=document.getElementById("answers");
+ area.innerHTML="";
+ q.a.forEach((answer,i)=>{
+  const b=document.createElement("button");
+  b.className="answer";
+  b.textContent=answer;
+  b.onclick=()=>chooseAnswer(i);
+  area.appendChild(b);
+ });
+}
+
+function chooseAnswer(choice){
+ if(chosen)return;
+ chosen=true;
+ data.answered++;
+ const q=questions[index];
+ const buttons=document.querySelectorAll(".answer");
+ buttons.forEach((b,i)=>{
+  b.disabled=true;
+  if(i===q.c)b.classList.add("correct");
+  if(i===choice&&choice!==q.c)b.classList.add("wrong");
+ });
+ const feedback=document.getElementById("feedback");
+ feedback.classList.remove("hidden");
+ if(choice===q.c){
+  score++;
+  data.xp+=10;
+  data.coins+=2;
+  feedback.textContent="✓ Correct! +10 XP and +2 coins. "+q.e;
+ }else{
+  feedback.textContent="Not quite! The correct answer is: "+q.a[q.c]+". "+q.e;
+ }
+ save();
+ document.getElementById("next").textContent=index===4?"Finish lesson":"Next question →";
+ document.getElementById("next").classList.remove("hidden");
+}
+
+function nextQuestion(){
+ if(index<4){
+  index++;
+  showQuestion();
+ }else{
+  finishLesson();
+ }
+}
+
+function finishLesson(){
+ data.lessons++;
+ data.xp+=25;
+ data.coins+=10;
+ if(score===5){
+  data.perfect++;
+  data.coins+=10;
+ }
+ save();
+ document.getElementById("questionNumber").classList.add("hidden");
+ document.getElementById("questionProgress").parentElement.classList.add("hidden");
+ document.getElementById("question").classList.add("hidden");
+ document.getElementById("answers").classList.add("hidden");
+ document.getElementById("feedback").classList.add("hidden");
+ document.getElementById("next").classList.add("hidden");
+ document.getElementById("result").classList.remove("hidden");
+ document.getElementById("resultText").textContent="You scored "+score+"/5. You earned 25 bonus XP and 10 coins"+(score===5?" plus 10 perfect-lesson bonus coins!":"!");
+}
+
+function renderMap(){
+ const places=[
+  {name:"London",flag:"🇬🇧",country:"United Kingdom",xp:0},
+  {name:"Paris",flag:"🇫🇷",country:"France",xp:100},
+  {name:"Rome",flag:"🇮🇹",country:"Italy",xp:250},
+  {name:"New York",flag:"🇺🇸",country:"United States",xp:450},
+  {name:"Tokyo",flag:"🇯🇵",country:"Japan",xp:700}
+ ];
+ document.getElementById("destinations").innerHTML=places.map(p=>{
+  const unlocked=data.xp>=p.xp;
+  return `<div class="destination">
+   <div class="flag">${p.flag}</div>
+   <div class="destination-info"><strong>${p.name}</strong><p>${p.country}</p>
+   <span class="${unlocked?"badge":"lock"}">${unlocked?"✓ Unlocked":"🔒 "+p.xp+" XP required"}</span></div>
+  </div>`;
+ }).join("");
+}
+
+startLesson();
+update();
+</script>
+</body>
+</html>
